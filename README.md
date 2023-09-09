@@ -1,8 +1,8 @@
-# MY_GPT
+# gptplat
 
 ## 模块
 
-- my_gpt
+- gptplat
     - gpt chat-gpt
     - auth 权限管理
     - manage 后台用户管理
@@ -10,7 +10,7 @@
 
 ## gpt模块架构设计图
 
-![架构设计图](static/img/my_gpt.jpg)
+![架构设计图](static/img/gpt_arch.jpg)
 
 ## auth设计
 
