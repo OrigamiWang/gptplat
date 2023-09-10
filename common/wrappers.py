@@ -9,7 +9,7 @@ from common import redis_util
 
 def login_required(f):
     def wrapper(*args, **kwargs):
-        if redis_util.exists_key(session['username']):
+        if session.get('username') is not None and redis_util.exists_key(session['username']):
             return f(*args, **kwargs)
         return redirect(url_for('auth.login'))
 
@@ -27,4 +27,5 @@ def permission_required(permission: int):
 
         inner_wrapper.__name__ = f.__name__
         return inner_wrapper
+
     return wrapper
