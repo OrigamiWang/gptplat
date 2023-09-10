@@ -36,28 +36,6 @@ def get_user_by_id(user_id):
     return user
 
 
-# 示例
-"""
-{
-    "users": [
-        {
-            "username": "c1",
-            "password": "p1",
-            "permission": 1
-        },
-        {
-            "username": "c2",
-            "password": "p2",
-            "permission": 1
-        },
-        {
-            "username": "c3",
-            "password": "p3",
-            "permission": 1
-        }
-    ]
-}
-"""
 
 
 def add_users(user_list):

@@ -5,6 +5,7 @@ from gpt import gpt_api
 from manage import manage_api
 from flask import Flask, redirect, url_for, request
 from common import exception, mysql_util
+from flask_docs import ApiDoc
 
 app = Flask(__name__, template_folder='templates')
 # 设置密钥用于session
@@ -13,6 +14,14 @@ app.secret_key = 'ba3a1d17a1a6e9c4cbe3fbe2e6b7ca99a5b0983fe566a1dad8c3ad450d4bf1
 app.register_blueprint(gpt_api, url_prefix='/gpt')
 app.register_blueprint(auth_api, url_prefix='/auth')
 app.register_blueprint(manage_api, url_prefix='/manage')
+# 配置api文档: 访问路径：127.0.0.1:5000/docs/api
+app.config["API_DOC_MEMBER"] = ["gpt", "auth", "manage"]
+ApiDoc(
+    app,
+    title="Sample App",
+    version="1.0.0",
+    description="A simple app API",
+)
 
 with app.app_context():
     db = mysql_util.get_db()

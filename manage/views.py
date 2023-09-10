@@ -10,11 +10,22 @@ from flask import jsonify, request
 from common import wrappers
 
 
-@manage_api.route('/user', methods=['GET'])
-@manage_api.route('/user/<user_id>', methods=['GET'])
 @wrappers.login_required
 @wrappers.permission_required(2)
+@manage_api.route('/user', methods=['GET'])
+@manage_api.route('/user/<user_id>', methods=['GET'])
 def get_users(user_id=None):
+    """get users
+    @@@
+    ### 获取用户
+    - 访问 /user
+        - 获取所有用户
+    - 访问/user?userNum&userSize
+        - 分页获取所有用户
+    - 访问 /user/user_id
+        - 获取某个用户
+    @@@
+    """
     try:
         req_args = request.args
         pageNum = req_args.get("pageNum")
@@ -32,10 +43,37 @@ def get_users(user_id=None):
         raise exception.ServerException("manage.get_users")
 
 
-@manage_api.route('/user', methods=['POST'])
 @wrappers.login_required
 @wrappers.permission_required(2)
+@manage_api.route('/user', methods=['POST'])
 def add_user():
+    """add users
+    @@@
+    ### 通过json批量添加用户
+    - 示例如下
+    ```json
+    {
+    "users": [
+        {
+            "username": "c1",
+            "password": "p1",
+            "permission": 1
+        },
+        {
+            "username": "c2",
+            "password": "p2",
+            "permission": 1
+        },
+        {
+            "username": "c3",
+            "password": "p3",
+            "permission": 1
+        }
+    ]
+}
+    ```
+    @@@
+    """
     try:
         req_json = request.json
         crud.add_users(req_json['users'])
@@ -44,10 +82,25 @@ def add_user():
         raise exception.ServerException("manage.add_user")
 
 
-@manage_api.route('/user/<username>', methods=['PUT'])
 @wrappers.login_required
 @wrappers.permission_required(2)
+@manage_api.route('/user/<username>', methods=['PUT'])
 def update_user(username):
+    """update a user
+    @@@
+    ### 通过用户名修改用户信息
+    - 示例如下
+    ```json
+    {
+        "user": {
+            "username": "test1",
+            "password": "psw1",
+            "permission": 1
+        }
+    }
+    ```
+    @@@
+    """
     try:
         req_json = request.json
         crud.update_user(username, req_json['user'])
@@ -56,10 +109,15 @@ def update_user(username):
         raise exception.ServerException("manage.update_users")
 
 
-@manage_api.route('/user/<user_id>', methods=["DELETE"])
 @wrappers.login_required
 @wrappers.permission_required(2)
+@manage_api.route('/user/<user_id>', methods=["DELETE"])
 def delete_user(user_id):
+    """delete a user
+    @@@
+    ### 删除一个用户
+    @@@
+    """
     try:
         crud.delete_user_by_id(user_id)
         return jsonify({"status": 200})

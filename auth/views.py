@@ -10,6 +10,11 @@ from flask import render_template, request, jsonify, session, redirect, url_for
 
 @auth_api.route('/login/', methods=['GET', 'POST'])  # 登录
 def login():
+    """login
+    @@@
+    ### 用户登录接口
+    @@@
+    """
     try:
         if request.method == 'POST':
             req_args = request.args
@@ -42,9 +47,15 @@ def query_user(username: str):
     return user
 
 
-@auth_api.route('/logout')  # 登出
+
 @wrappers.login_required
+@auth_api.route('/logout/')  # 登出
 def logout():
+    """log out
+    @@@
+    ### 用户退出登录
+    @@@
+    """
     try:
         print("logout")
         username = session['username']
@@ -54,29 +65,47 @@ def logout():
         raise exception.ServerException("auth.logout")
 
 
-@auth_api.route('/pro')
+
 @wrappers.login_required
 @wrappers.permission_required(1)
+@auth_api.route('/pro')
 def protect():
+    """protect
+    @@@
+    ### 测试权限，permission >= 1的可以访问此页面
+    @@@
+    """
     try:
         return render_template('auth/protected.html')
     except Exception:
         raise exception.ServerException("auth.protect")
 
 
-@auth_api.route('/super')
+
 @wrappers.login_required
 @wrappers.permission_required(2)
+@auth_api.route('/super')
 def super_permission():
+    """super_permission
+    @@@
+    ### 测试权限，permission >= 2的可以访问
+    @@@
+    """
     try:
         return "超级权限"
     except Exception:
         raise exception.ServerException("auth.super_permission")
 
 
-@auth_api.route('/', methods=['GET'])
+
 @wrappers.login_required
+@auth_api.route('/', methods=['GET'])
 def index():
+    """index
+    @@@
+    ### 用户登录页面
+    @@@
+    """
     try:
         print("index...")
         return render_template('auth/index.html')
