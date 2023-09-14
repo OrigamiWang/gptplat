@@ -10,10 +10,11 @@ from flask import jsonify, request
 from common import wrappers
 
 
-@wrappers.login_required
-@wrappers.permission_required(2)
+
 @manage_api.route('/user', methods=['GET'])
 @manage_api.route('/user/<user_id>', methods=['GET'])
+@wrappers.login_required
+@wrappers.permission_required(2)
 def get_users(user_id=None):
     """get users
     @@@
@@ -43,9 +44,10 @@ def get_users(user_id=None):
         raise exception.ServerException("manage.get_users")
 
 
+
+@manage_api.route('/user', methods=['POST'])
 @wrappers.login_required
 @wrappers.permission_required(2)
-@manage_api.route('/user', methods=['POST'])
 def add_user():
     """add users
     @@@
@@ -82,9 +84,10 @@ def add_user():
         raise exception.ServerException("manage.add_user")
 
 
+
+@manage_api.route('/user/<username>', methods=['PUT'])
 @wrappers.login_required
 @wrappers.permission_required(2)
-@manage_api.route('/user/<username>', methods=['PUT'])
 def update_user(username):
     """update a user
     @@@
@@ -109,9 +112,11 @@ def update_user(username):
         raise exception.ServerException("manage.update_users")
 
 
+
+
+@manage_api.route('/user/<user_id>', methods=["DELETE"])
 @wrappers.login_required
 @wrappers.permission_required(2)
-@manage_api.route('/user/<user_id>', methods=["DELETE"])
 def delete_user(user_id):
     """delete a user
     @@@

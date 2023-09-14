@@ -7,6 +7,13 @@ from flask import Flask, redirect, url_for, request
 from common import exception, mysql_util
 from flask_docs import ApiDoc
 
+import argparse
+from waitress import serve
+parser = argparse.ArgumentParser(description='gpt platform')
+parser.add_argument('--listen', default='0.0.0.0', type=str, help='the network to listen')
+parser.add_argument('--port', default='5000', type=str, help='the port to listen')
+args = parser.parse_args()
+
 app = Flask(__name__, template_folder='templates')
 # 设置密钥用于session
 app.secret_key = 'ba3a1d17a1a6e9c4cbe3fbe2e6b7ca99a5b0983fe566a1dad8c3ad450d4bf1a1'
@@ -54,4 +61,7 @@ def redirect2gpt():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    # app.run(host='0.0.0.0', debug=True)
+
+
+    serve(app, host=args.listen, port=args.port)

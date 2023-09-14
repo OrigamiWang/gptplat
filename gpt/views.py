@@ -13,9 +13,10 @@ from common import exception, wrappers
 
 
 
+
+@gpt_api.route('/session_id')
 @wrappers.login_required
 @wrappers.permission_required(1)
-@gpt_api.route('/session_id')
 def session_id():
     """session id
     @@@
@@ -32,9 +33,10 @@ def session_id():
 
 
 
+
+@gpt_api.route('/loadHistory', methods=["POST", "GET"])
 @wrappers.login_required
 @wrappers.permission_required(1)
-@gpt_api.route('/loadHistory', methods=["POST", "GET"])
 def load_history():
     """load history
     @@@
@@ -48,10 +50,11 @@ def load_history():
 
 
 
-@wrappers.login_required
-@wrappers.permission_required(1)
+
 @gpt_api.route("/")
 @gpt_api.route("/<sessionId>", methods=["POST", "GET"])
+@wrappers.login_required
+@wrappers.permission_required(1)
 def chatgpt(sessionId=None):
     """chat gpt
     @@@
@@ -74,9 +77,10 @@ def chatgpt(sessionId=None):
 
 
 
+
+@gpt_api.route('/content/<msg_id>', methods=["GET", "POST"])
 @wrappers.login_required
 @wrappers.permission_required(1)
-@gpt_api.route('/content/<msg_id>', methods=["GET", "POST"])
 def get_content_list(msg_id):
     """get content list
     @@@
@@ -95,9 +99,10 @@ def get_content_list(msg_id):
 
 
 
+
+@gpt_api.route('/cache/<sessionId>', methods=["POST", "GET"])
 @wrappers.login_required
 @wrappers.permission_required(1)
-@gpt_api.route('/cache/<sessionId>', methods=["POST", "GET"])
 def cache_persistent(sessionId):
     """redis to mysql
     @@@
@@ -112,9 +117,10 @@ def cache_persistent(sessionId):
 
 
 
+
+@gpt_api.route('/del/<msg_id>', methods=["GET", "POST"])
 @wrappers.login_required
 @wrappers.permission_required(1)
-@gpt_api.route('/del/<msg_id>', methods=["GET", "POST"])
 def del_by_msg_id(msg_id):
     """delete msg
     @@@

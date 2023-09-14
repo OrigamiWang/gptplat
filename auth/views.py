@@ -48,8 +48,9 @@ def query_user(username: str):
 
 
 
-@wrappers.login_required
+
 @auth_api.route('/logout/')  # 登出
+@wrappers.login_required
 def logout():
     """log out
     @@@
@@ -66,9 +67,10 @@ def logout():
 
 
 
+
+@auth_api.route('/pro')
 @wrappers.login_required
 @wrappers.permission_required(1)
-@auth_api.route('/pro')
 def protect():
     """protect
     @@@
@@ -82,9 +84,11 @@ def protect():
 
 
 
+
+
+@auth_api.route('/super')
 @wrappers.login_required
 @wrappers.permission_required(2)
-@auth_api.route('/super')
 def super_permission():
     """super_permission
     @@@
@@ -98,8 +102,10 @@ def super_permission():
 
 
 
-@wrappers.login_required
+
+
 @auth_api.route('/', methods=['GET'])
+@wrappers.login_required
 def index():
     """index
     @@@
