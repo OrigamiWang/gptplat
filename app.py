@@ -9,6 +9,7 @@ from flask_docs import ApiDoc
 
 import argparse
 from waitress import serve
+
 parser = argparse.ArgumentParser(description='gpt platform')
 parser.add_argument('--listen', default='0.0.0.0', type=str, help='the network to listen')
 parser.add_argument('--port', default='5000', type=str, help='the port to listen')
@@ -62,6 +63,5 @@ def redirect2gpt():
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', debug=True)
-
 
     serve(app, host=args.listen, port=args.port)

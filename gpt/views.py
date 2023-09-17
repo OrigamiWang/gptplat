@@ -5,13 +5,12 @@
 # @Project : gptplat
 
 from gpt import gpt_api
-from flask import render_template, request, make_response, jsonify, Response
+from flask import render_template, request, make_response, jsonify, Response, url_for, redirect
 from gpt.helpers.chat import chat_stream, load_his, cache_persistent_fun, get_content_list_fun, chatgpt_fun
 from common.mysql_util import del_fun
 from common.util import get_session_id
 from common import exception, wrappers
-
-
+import gpt.helpers.voice as v
 
 
 @gpt_api.route('/session_id')
@@ -32,8 +31,6 @@ def session_id():
         raise exception.ServerException("gpt.session_id")
 
 
-
-
 @gpt_api.route('/loadHistory', methods=["POST", "GET"])
 @wrappers.login_required
 @wrappers.permission_required(1)
@@ -49,6 +46,24 @@ def load_history():
         raise exception.ServerException("gpt.load_history")
 
 
+@gpt_api.route('/content/<msg_id>', methods=["GET", "POST"])
+@wrappers.login_required
+@wrappers.permission_required(1)
+def get_content_list(msg_id):
+    """get content list
+    @@@
+    ### 通过msg_id获取一次对话的所有内容
+    - msg_id
+        - 某次对话的id
+    - content
+        - 对话内容
+    @@@
+    """
+    try:
+        session_id, content_list = get_content_list_fun(msg_id)
+        return jsonify(session_id=session_id, content_list=content_list)
+    except Exception:
+        raise exception.ServerException("gpt.get_content_list")
 
 
 @gpt_api.route("/")
@@ -76,30 +91,6 @@ def chatgpt(sessionId=None):
         raise exception.ServerException("gpt.chatgpt")
 
 
-
-
-@gpt_api.route('/content/<msg_id>', methods=["GET", "POST"])
-@wrappers.login_required
-@wrappers.permission_required(1)
-def get_content_list(msg_id):
-    """get content list
-    @@@
-    ### 通过msg_id获取一次对话的所有内容
-    - msg_id
-        - 某次对话的id
-    - content
-        - 对话内容
-    @@@
-    """
-    try:
-        session_id, content_list = get_content_list_fun(msg_id)
-        return jsonify(session_id=session_id, content_list=content_list)
-    except Exception:
-        raise exception.ServerException("gpt.get_content_list")
-
-
-
-
 @gpt_api.route('/cache/<sessionId>', methods=["POST", "GET"])
 @wrappers.login_required
 @wrappers.permission_required(1)
@@ -116,8 +107,6 @@ def cache_persistent(sessionId):
         raise exception.ServerException("gpt.cache_persistent")
 
 
-
-
 @gpt_api.route('/del/<msg_id>', methods=["GET", "POST"])
 @wrappers.login_required
 @wrappers.permission_required(1)
@@ -132,3 +121,23 @@ def del_by_msg_id(msg_id):
         return jsonify("del success!")
     except Exception:
         raise exception.ServerException("gpt.del_by_msg_id")
+
+
+@gpt_api.route('/voice/<sessionId>', methods=['GET', 'POST'])
+@wrappers.login_required
+@wrappers.permission_required(1)
+def voice_recognition(sessionId=None):
+    """voice_recognition
+    @@@
+    ### 语音识别
+    @@@
+    """
+    try:
+        # get file
+        # voice_file = request.files['voice_file']
+        # process file
+        voice_file = ''
+        text_res = v.handle_voice(voice_file)
+        return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
+    except Exception:
+        raise exception.ServerException("gpt.voice_recognition")
