@@ -140,6 +140,6 @@ def voice_recognition(sessionId=None):
         # process file
         voice_file = ''
         text_res = v.handle_voice(voice_file)
-        # return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
+        return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
     except Exception:
         raise exception.ServerException("gpt.voice_recognition")
