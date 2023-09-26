@@ -1,6 +1,6 @@
 import openai
 
-from common.mysql_util import query_history, insert_message_table, update_time, insert_content_table, \
+from common.mysql.gpt import query_history, insert_message_table, update_time, insert_content_table, \
     query_content_list, get_sessionId_by_msgId, insert_user_msg_table
 from common.redis_util import get_v, update_v, set_kv, exists_key, flush_cache
 from common.util import read_yaml, process_history_datetime, tuple_to_list, list_to_dict

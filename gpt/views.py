@@ -7,7 +7,8 @@
 from gpt import gpt_api
 from flask import render_template, request, make_response, jsonify, Response, url_for, redirect
 from gpt.helpers.chat import chat_stream, load_his, cache_persistent_fun, get_content_list_fun, chatgpt_fun
-from common.mysql_util import del_fun
+from gpt.helpers.customize_role import get_role_sentence, get_role_list, add_new_role
+from common.mysql.gpt import del_fun
 from common.util import get_session_id
 from common import exception, wrappers
 import gpt.helpers.voice as v
@@ -143,3 +144,46 @@ def voice_recognition(sessionId=None):
         return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
     except Exception:
         raise exception.ServerException("gpt.voice_recognition")
+
+
+@gpt_api.route('/role/<id>', methods=['GET'])
+def choose_role(id):
+    """choose_role
+    @@@
+    ### 选择角色进行对话
+    @@@
+    """
+    sessionId = request.args.get("sessionId")
+    print(sessionId)
+    role_sentence = get_role_sentence(id)
+    return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=role_sentence))
+
+
+@gpt_api.route('/role/', methods=['GET'])
+def get_all_role():
+    """get_all_role
+    @@@
+    ### 获取角色列表（包括角色名和角色prompt）
+    @@@
+    """
+    role_list = get_role_list()
+    return jsonify(role_list)
+
+
+@gpt_api.route('/role/', methods=['POST'])
+def add_one_role():
+    """add_a_role
+    @@@
+    ### 添加角色
+    - 使用json添加
+    ```json
+    {
+        "name": "Doctor",
+        "sentence": "save the people"
+    }
+    ```
+    @@@
+    """
+    json_str = request.get_json()
+    add_new_role(json_str['name'], json_str['sentence'])
+    return "add role successful!"

@@ -3,7 +3,8 @@
 # @Author : Origami
 # @File : views
 # @Project : gptplat
-from common import wrappers, mysql_util, redis_util
+from common import wrappers, redis_util
+from common.mysql import mysql_util
 from auth import auth_api
 from flask import render_template, request, jsonify, session, redirect, url_for
 

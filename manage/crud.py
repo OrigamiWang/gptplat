@@ -3,7 +3,7 @@
 # @Author : Origami
 # @File : crud
 # @Project : gptplat
-from common import mysql_util
+from common.mysql import mysql_util
 
 
 def get_all_user():

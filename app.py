@@ -4,7 +4,8 @@ from auth import auth_api
 from gpt import gpt_api
 from manage import manage_api
 from flask import Flask, redirect, url_for, request
-from common import exception, mysql_util
+from common import exception
+from common.mysql import mysql_util
 from flask_docs import ApiDoc
 
 import argparse
