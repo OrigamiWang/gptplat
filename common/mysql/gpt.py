@@ -4,7 +4,7 @@
 # @File : content
 # @Project : gptplat
 from common.mysql.mysql_util import db
-
+from flask import session
 
 def execute_sql(sql):
     with db.cursor() as cursor:
