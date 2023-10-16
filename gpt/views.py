@@ -8,10 +8,12 @@ from gpt import gpt_api
 from flask import render_template, request, make_response, jsonify, Response, url_for, redirect
 from gpt.helpers.chat import chat_stream, load_his, cache_persistent_fun, get_content_list_fun, chatgpt_fun
 from gpt.helpers.customize_role import get_role_sentence, get_role_list, add_new_role
+from gpt.helpers.star import get_star_list_by_id, update_star_name_by_name, create_star_by_id, delete_user_by_id
 from common.mysql.gpt import del_fun
 from common.util import get_session_id
 from common import exception, wrappers
 import gpt.helpers.voice as v
+import common.status as status
 
 
 @gpt_api.route('/session_id')
@@ -187,3 +189,71 @@ def add_one_role():
     json_str = request.get_json()
     add_new_role(json_str['name'], json_str['sentence'])
     return "add role successful!"
+
+
+@gpt_api.route('/star/<user_id>', methods=['GET'])
+# @wrappers.login_required
+# @wrappers.permission_required(1)
+def get_star_list(user_id):
+    """get star list
+    @@@
+    ### 获取用户的收藏夹列表
+    @@@
+    """
+    try:
+        star_list = get_star_list_by_id(user_id)
+        return jsonify(status=status.HTTP_OK, msg="success", data=star_list)
+    except Exception:
+        raise exception.ServerException("gpt.get_star_list")
+
+
+@gpt_api.route('/star/<user_id>', methods=['PUT'])
+# @wrappers.login_required
+# @wrappers.permission_required(1)
+def update_star(user_id):
+    """update star
+    @@@
+    ### 判断并更新收藏夹名字
+    @@@
+    """
+    try:
+        new_name = request.args.get("newName")
+        old_name = request.args.get("oldName")
+        if new_name is None or old_name is None:
+            return jsonify(status=status.HTTP_ARGS_ERR, msg="参数异常")
+        update_star_name_by_name(user_id, old_name, new_name)
+        return jsonify(status=status.HTTP_OK, msg="success")
+    except Exception:
+        raise exception.ServerException("gpt.get_star_list")
+
+
+@gpt_api.route('/star/<user_id>', methods=['DELETE'])
+@wrappers.login_required
+@wrappers.permission_required(1)
+def delete_star(user_id):
+    """delete star
+    @@@
+    ### 删除收藏夹
+    @@@
+    """
+    name = request.args.get("name")
+    if name is None:
+        return jsonify(status=status.HTTP_ARGS_ERR, msg="参数异常")
+    delete_user_by_id(user_id, name)
+    return jsonify(status=status.HTTP_OK, msg="success")
+
+
+@gpt_api.route('/star/<user_id>', methods=['POST'])
+@wrappers.login_required
+@wrappers.permission_required(1)
+def add_star(user_id):
+    """add star
+    @@@
+    ### 新建收藏夹
+    @@@
+    """
+    name = request.args.get("name")
+    if name is None:
+        return jsonify(status=status.HTTP_ARGS_ERR, msg="参数异常")
+    create_star_by_id(user_id, name)
+    return jsonify(status=status.HTTP_OK, msg="success")

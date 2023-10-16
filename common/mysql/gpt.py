@@ -6,6 +6,7 @@
 from common.mysql.mysql_util import db
 from flask import session
 
+# TODO: 添加content和message的user_id
 def execute_sql(sql):
     with db.cursor() as cursor:
         cursor.execute(sql)
