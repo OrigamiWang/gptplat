@@ -5,8 +5,9 @@
 # @Project : gptplat
 from common.mysql.mysql_util import db
 from flask import session
+import common.util as util
 
-# TODO: 添加content和message的user_id
+
 def execute_sql(sql):
     with db.cursor() as cursor:
         cursor.execute(sql)
@@ -18,7 +19,7 @@ def insert_content_table(content_arr):
         sql = "INSERT INTO content(`session_id`, `role`, `sentence`) VALUES"
         sql_arr = []
         for content in content_arr:
-            value = "(\'" + content['sessionId'] + "\'," + str(get_num_by_role(content['role'])) + ",\'" + content[
+            value = "(\'" + content['sessionId'] + "\'," + str(util.get_num_by_role(content['role'])) + ",\'" + content[
                 'content'] + "\'),"
             sql_arr.append(value)
         sql += "".join(sql_arr)
@@ -26,11 +27,12 @@ def insert_content_table(content_arr):
         db.commit()
 
 
-def insert_message_table(message):
+def insert_message_table(message, user_id):
     with db.cursor() as cursor:
         name = message['name']
         sessionId = message['sessionId']
-        sql = "INSERT INTO message(`name`, `session_id`) VALUE(\'" + name + "\', \'" + sessionId + "\');"
+        sql = "INSERT INTO message(`name`, `session_id`, `user_id`) VALUE(\'" + name + "\', \'" + sessionId \
+              + "\', " + user_id + ");"
         cursor.execute(sql)
     db.commit()
 
@@ -85,12 +87,21 @@ def del_message_by_msg_id(msg_id):
     db.commit()
 
 
+def del_user_msg_by_id(user_id, msg_id):
+    with db.cursor() as cursor:
+        sql = "DELETE FROM user_msg WHERE user_id = " + user_id + " AND message_id = " + msg_id
+        cursor.execute(sql)
+    db.commit()
+
+
 # 删除message以及对应的content
-def del_fun(msg_id):
+def del_fun(user_id, msg_id):
     # 删除content
     del_content_by_msg_id(msg_id)
     # 删除message
     del_message_by_msg_id(msg_id)
+    # 删除user_msg
+    del_user_msg_by_id(user_id, msg_id)
 
 
 def query_history():

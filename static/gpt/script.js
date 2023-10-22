@@ -14,7 +14,7 @@ window.onload = () => {
 // 页面关闭时触发，将redis缓存中的数据持久化到mysql
 window.onbeforeunload = () => {
     if (session_id != null) {
-        navigator.sendBeacon('/gpt/cache/' + session_id, '');
+        navigator.sendBeacon('/gpt/cache/' + session_id + '/' + 1, '');
         session_id = null
     }
 }

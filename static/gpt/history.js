@@ -102,7 +102,7 @@ function fetch_del(div) {
         // 获取msg_id
         const msg_id = get_msg_id_by_img_div(div)
         // fetch
-        fetch('/gpt/del/' + msg_id)
+        fetch('/gpt/del/' + msg_id + '/' + 1)
             .then(response => response.json())
             .then(data => {
                 console.log(data)
@@ -179,11 +179,13 @@ function create_history_list() {
 
     for (let i = 0; i < history_arr.length; i++) {
         let history = history_arr[i]
-        let history_box = create_history_box(history[0], history[1], history[2])
+        console.log(history)
+        let history_box = create_history_box(history[0], history[2], history[3])
         access_history(history_box)
     }
     add_events()
 }
+
 function loadAnswerText(answer_div, text) {
     // innerText的回车是\n, innerHTML的回车是<br>
     // answer_div.innerText = answer_div.innerText + text

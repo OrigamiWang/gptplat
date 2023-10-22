@@ -16,10 +16,10 @@ def get_role_by_num(num):
     role_dict = {1: "system", 2: "user", 3: "assistant"}
     return role_dict[num]
 
-
+# 将datetime字段从datetime类型转成str类型
 def process_history_datetime(history_list):
     for history in history_list:
-        history[2] = str(history[2])
+        history[3] = str(history[3])
     return history_list
 
 

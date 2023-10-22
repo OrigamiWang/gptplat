@@ -94,33 +94,33 @@ def chatgpt(sessionId=None):
         raise exception.ServerException("gpt.chatgpt")
 
 
-@gpt_api.route('/cache/<sessionId>', methods=["POST", "GET"])
+@gpt_api.route('/cache/<sessionId>/<user_id>', methods=["POST", "GET"])
 @wrappers.login_required
 @wrappers.permission_required(1)
-def cache_persistent(sessionId):
+def cache_persistent(sessionId, user_id):
     """redis to mysql
     @@@
     ### 将redis的对话缓存持久化到mysql
     @@@
     """
     try:
-        cache_persistent_fun(sessionId)
+        cache_persistent_fun(sessionId, user_id)
         return "cache"
     except Exception:
         raise exception.ServerException("gpt.cache_persistent")
 
 
-@gpt_api.route('/del/<msg_id>', methods=["GET", "POST"])
+@gpt_api.route('/del/<msg_id>/<user_id>', methods=["GET", "POST"])
 @wrappers.login_required
 @wrappers.permission_required(1)
-def del_by_msg_id(msg_id):
+def del_by_msg_id(msg_id, user_id):
     """delete msg
     @@@
     ### 删除数据库中某一次对话的记录以及内容
     @@@
     """
     try:
-        del_fun(msg_id)
+        del_fun(user_id, msg_id)
         return jsonify("del success!")
     except Exception:
         raise exception.ServerException("gpt.del_by_msg_id")

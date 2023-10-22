@@ -6,7 +6,6 @@ from common.redis_util import get_v, update_v, set_kv, exists_key, flush_cache
 from common.util import read_yaml, process_history_datetime, tuple_to_list, list_to_dict
 
 
-
 def get_name_by_question(question):
     str_len = len(question) if len(question) < 100 else 100
     name = str(question)[0:str_len]
@@ -53,7 +52,7 @@ def load_his():
     return process_history_datetime(tuple_to_list(query_history()))
 
 
-def cache_persistent_fun(sessionId):
+def cache_persistent_fun(sessionId, user_id):
     message_key = str(sessionId) + "_message"
     content_key = str(sessionId) + "_content"
     content_num_key = str(sessionId) + "_content_num"
@@ -63,7 +62,7 @@ def cache_persistent_fun(sessionId):
             message_tuple = eval(get_v(message_key))
             message = dict(message_tuple)
             content_arr = list(eval(get_v(content_key)))
-            insert_message_table(message)
+            insert_message_table(message, user_id)
             # 插入user_msg
             insert_user_msg_table()
         else:
