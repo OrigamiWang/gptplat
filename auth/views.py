@@ -30,7 +30,12 @@ def login():
                 # redis_util.set_kv_with_expire(username, user_info, 60 * 60)
                 redis_util.set_kv_with_expire(username + "_permission", user_info[3], 60 * 60)
                 redis_util.set_kv_with_expire(username, username, 60 * 60)
-                return jsonify({'status': 200})
+                return jsonify({
+                    'status': 200,
+                    'data': {
+                        'userId': user_info[0],
+                    },
+                })
                 # return redirect(url_for('admin.index'))
                 # return redirect(request.args.get('next') or url_for('index'))
             else:
