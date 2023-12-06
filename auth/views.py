@@ -3,7 +3,7 @@
 # @Author : Origami
 # @File : views
 # @Project : gptplat
-from common import wrappers, redis_util
+from common import wrappers, redis_util, exception
 from common.mysql import mysql_util
 from auth import auth_api
 from flask import render_template, request, jsonify, session, redirect, url_for
@@ -25,7 +25,7 @@ def login():
             if user_info is not None and user_info[2] == password:
                 # 将用户名存入session以便获取,保存在client侧
                 session['username'] = username
-                print("session[username]",session['username'])
+                print("session[username]", session['username'])
                 # redis保持登录状态保持一小时
                 # redis_util.set_kv_with_expire(username, user_info, 60 * 60)
                 redis_util.set_kv_with_expire(username + "_permission", user_info[3], 60 * 60)
@@ -49,8 +49,6 @@ def query_user(username: str):
     return user
 
 
-
-
 @auth_api.route('/logout/')  # 登出
 @wrappers.login_required
 def logout():
@@ -68,8 +66,6 @@ def logout():
         raise exception.ServerException("auth.logout")
 
 
-
-
 @auth_api.route('/pro')
 @wrappers.login_required
 @wrappers.permission_required(1)
@@ -85,9 +81,6 @@ def protect():
         raise exception.ServerException("auth.protect")
 
 
-
-
-
 @auth_api.route('/super')
 @wrappers.login_required
 @wrappers.permission_required(2)
@@ -101,9 +94,6 @@ def super_permission():
         return "超级权限"
     except Exception:
         raise exception.ServerException("auth.super_permission")
-
-
-
 
 
 @auth_api.route('/', methods=['GET'])

@@ -13,11 +13,10 @@ stream_asr_text = ""
 stream_buffer_text = ""
 
 
-def handle_voice(voice_file):
+def handle_voice(file_path):
     # voice_file = pre_process_voice(voice_file)
     # wave_data = transfer_file(voice_file)
-    wave_data = ''
-    text_res = wav2hanzi(wave_data)
+    text_res = wav2hanzi(file_path)
     return text_res
 
 
@@ -30,17 +29,16 @@ def transfer_file(voice_file):
     return voice_file
 
 
-def wav2hanzi(wave_data):
+def wav2hanzi(file_path):
     SUB_PATH = ''
     speech_recognizer = asrt_sdk.get_speech_recognizer(
         read_yaml('asrt.host'), str(read_yaml('asrt.port')), read_yaml('asrt.protocol'))
     speech_recognizer.sub_path = SUB_PATH
-    FILENAME = 'test1.wav'
-    result = speech_recognizer.recognite_file(FILENAME)
+    result = speech_recognizer.recognite_file(file_path)
     for index in range(0, len(result)):
         item = result[index]
         # print("第", index, "段:", item.result)
-    wave_data = asrt_sdk.read_wav_datas(FILENAME)
+    wave_data = asrt_sdk.read_wav_datas(file_path)
     result = speech_recognizer.recognite_speech(wave_data.str_data,
                                                 wave_data.sample_rate,
                                                 wave_data.channels,

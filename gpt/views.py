@@ -14,6 +14,7 @@ from common.util import get_session_id
 from common import exception, wrappers
 import gpt.helpers.voice as v
 import common.status as status
+import uuid
 
 
 @gpt_api.route('/session_id')
@@ -126,7 +127,7 @@ def del_by_msg_id(msg_id, user_id):
         raise exception.ServerException("gpt.del_by_msg_id")
 
 
-@gpt_api.route('/voice/<sessionId>', methods=['GET', 'POST'])
+@gpt_api.route('/voice/<sessionId>', methods=['POST'])
 @wrappers.login_required
 @wrappers.permission_required(1)
 def voice_recognition(sessionId=None):
@@ -139,10 +140,11 @@ def voice_recognition(sessionId=None):
     """
     try:
         # get file
-        # voice_file = request.files['voice_file']
+        voice_file = request.files.get('voice_file')
+        file_path = str(uuid.uuid1()) + ".wav"
+        voice_file.save(file_path)
         # process file
-        voice_file = ''
-        text_res = v.handle_voice(voice_file)
+        text_res = v.handle_voice(file_path)
         return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
     except Exception:
         raise exception.ServerException("gpt.voice_recognition")
