@@ -1,0 +1,30 @@
+database:
+  mysql:
+    #    host: 127.0.0.1
+    #    port: 3306
+    #    username: root
+    #    password: abc123
+    #    host: 47.97.17.209
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: abc123
+    db: my_gpt
+  redis:
+    #    host: 47.97.17.209
+    host: 127.0.0.1
+    port: 6379
+
+gpt:
+  #  gpt-3.5-turbo
+  model: gpt-3.5-turbo
+  key: sk-psEikvwFzG3sxtPXx48HbUflRqiW7rVmIjdilXY7gfeFaFH6
+  #    gpt-4 "sk-nPPIuTvXRveDFG2ANPrBcPLqma9HXxSgDbhiZ8E6In3lm08k"
+  #  key: sk-nPPIuTvXRveDFG2ANPrBcPLqma9HXxSgDbhiZ8E6In3lm08k
+  #  model: gpt-4
+  url: https://api.chatanywhere.com.cn/v1
+
+asrt:
+  host: 127.0.0.1
+  port: 20001
+  protocol: http

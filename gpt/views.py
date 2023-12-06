@@ -127,10 +127,10 @@ def del_by_msg_id(msg_id, user_id):
         raise exception.ServerException("gpt.del_by_msg_id")
 
 
-@gpt_api.route('/voice/<sessionId>', methods=['POST'])
+@gpt_api.route('/voice', methods=['POST'])
 @wrappers.login_required
 @wrappers.permission_required(1)
-def voice_recognition(sessionId=None):
+def voice_recognition():
     """voice_recognition
     @@@
     ### 语音识别
@@ -145,7 +145,8 @@ def voice_recognition(sessionId=None):
         voice_file.save(file_path)
         # process file
         text_res = v.handle_voice(file_path)
-        return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
+        return text_res
+        # return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
     except Exception:
         raise exception.ServerException("gpt.voice_recognition")
 
