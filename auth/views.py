@@ -7,7 +7,7 @@ from common import wrappers, redis_util
 from common.mysql import mysql_util
 from auth import auth_api
 from flask import render_template, request, jsonify, session, redirect, url_for
-
+from common import exception
 
 @auth_api.route('/login/', methods=['GET', 'POST'])  # 登录
 def login():
@@ -25,7 +25,7 @@ def login():
             if user_info is not None and user_info[2] == password:
                 # 将用户名存入session以便获取,保存在client侧
                 session['username'] = username
-                print("session[username]",session['username'])
+                print("session[username]", session['username'])
                 # redis保持登录状态保持一小时
                 # redis_util.set_kv_with_expire(username, user_info, 60 * 60)
                 redis_util.set_kv_with_expire(username + "_permission", user_info[3], 60 * 60)
@@ -33,7 +33,9 @@ def login():
                 return jsonify({
                     'status': 200,
                     'data': {
-                        'userId': user_info[0],
+                        'id': user_info[0],
+                        'name': user_info[1],
+                        'permission': user_info[3],
                     },
                 })
                 # return redirect(url_for('admin.index'))
@@ -45,6 +47,20 @@ def login():
     except Exception:
         raise exception.ServerException("auth.login")
 
+@auth_api.route('/current', methods=['GET'])  # 取当前登录者
+def current():
+    """current
+    @@@
+    ### 取当前用户
+    @@@
+    """
+    try:
+        return jsonify({
+            'status': 200,
+            'data': session
+        })
+    except Exception:
+        raise exception.ServerException("auth.current")
 
 def query_user(username: str):
     with mysql_util.db.cursor() as cursor:
