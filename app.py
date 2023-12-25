@@ -9,7 +9,6 @@ from common.mysql import mysql_util
 from flask_docs import ApiDoc
 
 import argparse
-from waitress import serve
 
 parser = argparse.ArgumentParser(description='gpt platform')
 parser.add_argument('--listen', default='0.0.0.0', type=str, help='the network to listen')
@@ -63,6 +62,6 @@ def redirect2gpt():
 
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True)
 
-    serve(app, host=args.listen, port=args.port)
+    # serve(app, host=args.listen, port=args.port)

@@ -64,6 +64,6 @@ def update_user(past_username, user):
 
 def delete_user_by_id(user_id):
     with mysql_util.db.cursor() as cursor:
-        sql = "DELETE u FROM users u WHERE u.`username` = \'" + str(user_id) + "\'"
+        sql = "DELETE u FROM users u WHERE u.`id` = \'" + str(user_id) + "\'"
         cursor.execute(sql)
         mysql_util.db.commit()

@@ -8,7 +8,7 @@
 from manage import crud, manage_api
 from flask import jsonify, request
 from common import wrappers
-
+from common import exception
 
 
 @manage_api.route('/user', methods=['GET'])

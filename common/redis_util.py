@@ -4,7 +4,10 @@ from common.util import read_yaml
 
 
 def connect_redis():
-    return redis.Redis(read_yaml('database.redis.host'), port=read_yaml('database.redis.port'))
+    return redis.Redis(read_yaml('database.redis.host'),
+                       port=read_yaml('database.redis.port'),
+                       password=read_yaml('database.redis.password')
+                       )
 
 
 conn = connect_redis()

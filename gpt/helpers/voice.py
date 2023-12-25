@@ -3,7 +3,7 @@
 # @Author : Origami
 # @File : voice
 # @Project : gptplat
-import asrt_sdk
+# import asrt_sdk
 import os
 from common.util import read_yaml
 

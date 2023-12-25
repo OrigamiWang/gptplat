@@ -147,6 +147,17 @@ def voice_recognition(sessionId=None):
     except Exception:
         raise exception.ServerException("gpt.voice_recognition")
 
+@gpt_api.route('/role/sentence/<id>', methods=['GET'])
+def get_sentence(id):
+    """choose_role
+    @@@
+    ### 查询角色语句
+    @@@
+    """
+    role_sentence = get_role_sentence(id)
+    return jsonify({
+        "roleSentence": role_sentence
+    })
 
 @gpt_api.route('/role/<id>', methods=['GET'])
 def choose_role(id):
