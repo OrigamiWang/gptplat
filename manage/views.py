@@ -7,9 +7,7 @@
 
 from manage import crud, manage_api
 from flask import jsonify, request
-from common import wrappers
-
-
+from common import wrappers, exception
 
 @manage_api.route('/user', methods=['GET'])
 @manage_api.route('/user/<user_id>', methods=['GET'])
@@ -39,6 +37,7 @@ def get_users(user_id=None):
             return jsonify({'users': users})
         else:
             users = crud.get_all_user()
+            print(users)
             return jsonify({'users': users})
     except Exception:
         raise exception.ServerException("manage.get_users")

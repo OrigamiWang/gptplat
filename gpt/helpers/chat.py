@@ -19,12 +19,7 @@ def chat_stream(messages, sessionId):
         model=read_yaml('gpt.model'),
         messages=messages,
         temperature=0.6,
-        # max_tokens=1000,1
         stream=True,
-        # top_p=1,
-        # frequency_penalty=0,
-        # presence_penalty=0,
-        # user='Wemio机器人'
     )
     sentence_list = []
     for trunk in response:

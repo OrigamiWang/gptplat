@@ -3,7 +3,8 @@
 # @Author : Origami
 # @File : views
 # @Project : gptplat
-
+import os
+import wave
 from gpt import gpt_api
 from flask import render_template, request, make_response, jsonify, Response, url_for, redirect
 from gpt.helpers.chat import chat_stream, load_his, cache_persistent_fun, get_content_list_fun, chatgpt_fun
@@ -13,6 +14,7 @@ from common.mysql.gpt import del_fun
 from common.util import get_session_id
 from common import exception, wrappers
 import gpt.helpers.voice as v
+import base64
 import common.status as status
 import uuid
 
@@ -45,7 +47,9 @@ def load_history():
     @@@
     """
     try:
-        return load_his()
+        his = load_his()
+        print(his)
+        return his
     except Exception:
         raise exception.ServerException("gpt.load_history")
 
@@ -70,11 +74,10 @@ def get_content_list(msg_id):
         raise exception.ServerException("gpt.get_content_list")
 
 
-@gpt_api.route("/")
 @gpt_api.route("/<sessionId>", methods=["POST", "GET"])
 @wrappers.login_required
 @wrappers.permission_required(1)
-def chatgpt(sessionId=None):
+def chatgpt(sessionId):
     """chat gpt
     @@@
     ### chatgpt模块核心代码
@@ -128,8 +131,8 @@ def del_by_msg_id(msg_id, user_id):
 
 
 @gpt_api.route('/voice', methods=['POST'])
-@wrappers.login_required
-@wrappers.permission_required(1)
+# @wrappers.login_required
+# @wrappers.permission_required(1)
 def voice_recognition():
     """voice_recognition
     @@@
@@ -140,12 +143,24 @@ def voice_recognition():
     """
     try:
         # get file
-        voice_file = request.files.get('voice_file')
-        file_path = str(uuid.uuid1()) + ".wav"
-        voice_file.save(file_path)
+        audio_base64 = request.json.get('data')
+        print(audio_base64)
+        audio_data = base64.b64decode(audio_base64)
+
+        # 将解码后的音频数据写入文件
+        file_path = os.getenv('ROOT_PATH') + '/static/audio/' + str(uuid.uuid1()) + ".wav"  # 你可以根据需要修改文件名和路径
+        with wave.open(file_path, 'wb') as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(16000)
+            wf.writeframes(audio_data)
         # process file
         text_res = v.handle_voice(file_path)
-        return text_res
+        print("text_res: " + text_res)
+        return jsonify({
+            "data": text_res,
+            "status": 200
+        })
         # return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=text_res))
     except Exception:
         raise exception.ServerException("gpt.voice_recognition")
@@ -162,6 +177,19 @@ def choose_role(id):
     print(sessionId)
     role_sentence = get_role_sentence(id)
     return redirect(url_for('gpt.chatgpt', sessionId=sessionId, question=role_sentence))
+
+
+@gpt_api.route('/role/sentence/<id>', methods=['GET'])
+def get_sentence(id):
+    """choose_role
+    @@@
+    ### 查询角色语句
+    @@@
+    """
+    role_sentence = get_role_sentence(id)
+    return jsonify({
+        "roleSentence": role_sentence
+    })
 
 
 @gpt_api.route('/role/', methods=['GET'])

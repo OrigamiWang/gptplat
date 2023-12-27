@@ -1,6 +1,6 @@
 import pymysql as mysql
-from flask import g, Flask, session
-from common.util import read_yaml, get_num_by_role
+from flask import g, Flask
+from common.util import read_yaml
 
 
 def get_db():
@@ -21,6 +21,3 @@ with app.app_context():
 
 
 
-if __name__ == '__main__':
-    history_list = (query_history())
-    print(str(history_list))

@@ -4,18 +4,14 @@
 # @File : voice
 # @Project : gptplat
 import asrt_sdk
-import os
 from common.util import read_yaml
 
-# from app import root_path
 
 stream_asr_text = ""
 stream_buffer_text = ""
 
 
 def handle_voice(file_path):
-    # voice_file = pre_process_voice(voice_file)
-    # wave_data = transfer_file(voice_file)
     text_res = wav2hanzi(file_path)
     return text_res
 
@@ -34,6 +30,7 @@ def wav2hanzi(file_path):
     speech_recognizer = asrt_sdk.get_speech_recognizer(
         read_yaml('asrt.host'), str(read_yaml('asrt.port')), read_yaml('asrt.protocol'))
     speech_recognizer.sub_path = SUB_PATH
+    print("file_path: " + file_path)
     result = speech_recognizer.recognite_file(file_path)
     for index in range(0, len(result)):
         item = result[index]
