@@ -6,7 +6,7 @@
 import threading
 
 from common.mysql import mysql_util
-
+from flask import current_app
 
 
 def get_all_user():
@@ -48,7 +48,7 @@ def add_users(user_list):
             username = user['username']
             password = user['password']
             permission = user['permission']
-
+            current_app.logger.info("创建用户, 用户名：" + username + ", 权限：" + str(permission))
             sql += "(\'" + username + "\',\'" + password + "\'," + str(permission) + "),"
         sql = sql[0:len(sql) - 1] + ";"
         print(sql)

@@ -5,7 +5,7 @@
 # @Project : gptplat
 import traceback
 
-from flask import jsonify, make_response
+from flask import jsonify, make_response, current_app
 from common import status as status_code
 
 
@@ -16,7 +16,7 @@ class PageNotFoundException(Exception):
 
     @staticmethod
     def handler_err(self, e: Exception, url: str):
-        print(traceback.format_exc())
+        current_app.logger.error(f"An error occurred: {e}")
         resp = make_response("we cannot found the page: {}".format(url))
         resp.status = status_code.HTTP_PAGE_NOT_FOUND
         return resp
@@ -29,8 +29,8 @@ class FileParseException(Exception):
 
     @staticmethod
     def handler_err(self, e: Exception):
-        print(traceback.format_exc())
         file_path = 'unnamed'
+        current_app.logger.error(f"An error occurred: {e}")
         resp = make_response("we cannot parse the file: {}".format(file_path))
         resp.status = status_code.HTTP_FILE_PARSE_ERR
         return resp
@@ -43,7 +43,7 @@ class ServerException(Exception):
 
     @staticmethod
     def handler_err(self, e: Exception):
-        print(traceback.format_exc())
+        current_app.logger.error(f"An error occurred: {e}")
         resp = make_response("some error may occurred in the server")
         resp.status = status_code.HTTP_SERVER_ERR
         return resp

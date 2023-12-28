@@ -6,7 +6,7 @@
 
 
 from manage import crud, manage_api
-from flask import jsonify, request
+from flask import jsonify, request, current_app
 from common import wrappers, exception
 
 @manage_api.route('/user', methods=['GET'])
@@ -105,6 +105,7 @@ def update_user(username):
     """
     try:
         req_json = request.json
+        current_app.logger.info("修改用户, 用户名：" + req_json['user']['username'])
         crud.update_user(username, req_json['user'])
         return jsonify({"status": 200})
     except Exception:
@@ -123,6 +124,7 @@ def delete_user(user_id):
     @@@
     """
     try:
+        current_app.logger.info("删除用户, uid: " + str(user_id))
         crud.delete_user_by_id(user_id)
         return jsonify({"status": 200})
     except Exception:

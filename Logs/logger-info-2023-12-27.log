@@ -1,0 +1,9 @@
+2023-12-27 23:32:36,473 - INFO - views.py - login - 32 - userid: 1, 登录了系统
+2023-12-27 23:32:37,496 - INFO - views.py - logout - 81 - userid: 1, 退出了系统
+2023-12-27 23:33:18,170 - INFO - views.py - login - 32 - userid: 1, 登录了系统
+2023-12-27 23:33:22,582 - INFO - views.py - logout - 81 - userid: 1, 退出了系统
+2023-12-27 23:33:29,164 - INFO - views.py - login - 32 - userid: 1, 登录了系统
+2023-12-27 23:41:27,891 - INFO - crud.py - add_users - 51 - 创建用户, 用户名：123, 权限：2
+2023-12-27 23:41:38,791 - INFO - views.py - delete_user - 127 - 删除用户, uid: 13
+2023-12-27 23:41:50,946 - INFO - views.py - update_user - 108 - 修改用户, 用户名：suck me
+2023-12-27 23:42:51,811 - INFO - views.py - update_user - 108 - 修改用户, 用户名：idiot

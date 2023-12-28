@@ -6,7 +6,7 @@
 import os
 import wave
 from gpt import gpt_api
-from flask import render_template, request, make_response, jsonify, Response, url_for, redirect
+from flask import request, make_response, jsonify, Response, url_for, redirect
 from gpt.helpers.chat import chat_stream, load_his, cache_persistent_fun, get_content_list_fun, chatgpt_fun
 from gpt.helpers.customize_role import get_role_sentence, get_role_list, add_new_role
 from gpt.helpers.star import get_star_list_by_id, update_star_name_by_name, create_star_by_id, delete_user_by_id
@@ -89,11 +89,9 @@ def chatgpt(sessionId):
     """
     try:
         question = request.args.get("question", "")
-        resp = make_response(render_template('gpt/chatpgt.html'))
         if question:
             content_arr = chatgpt_fun(sessionId, question)
             return Response(chat_stream(content_arr, sessionId), mimetype="text/event-stream")
-        return resp
     except Exception:
         raise exception.ServerException("gpt.chatgpt")
 
@@ -223,8 +221,8 @@ def add_one_role():
 
 
 @gpt_api.route('/star/<user_id>', methods=['GET'])
-# @wrappers.login_required
-# @wrappers.permission_required(1)
+@wrappers.login_required
+@wrappers.permission_required(1)
 def get_star_list(user_id):
     """get star list
     @@@
@@ -239,8 +237,8 @@ def get_star_list(user_id):
 
 
 @gpt_api.route('/star/<user_id>', methods=['PUT'])
-# @wrappers.login_required
-# @wrappers.permission_required(1)
+@wrappers.login_required
+@wrappers.permission_required(1)
 def update_star(user_id):
     """update star
     @@@

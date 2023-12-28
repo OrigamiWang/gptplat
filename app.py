@@ -1,5 +1,4 @@
 import traceback
-
 from auth import auth_api
 from gpt import gpt_api
 from manage import manage_api
@@ -10,6 +9,8 @@ from flask_docs import ApiDoc
 import os
 import argparse
 from waitress import serve
+from util import log_handler
+import logging
 
 parser = argparse.ArgumentParser(description='gpt platform')
 parser.add_argument('--listen', default='0.0.0.0', type=str, help='the network to listen')
@@ -18,6 +19,8 @@ args = parser.parse_args()
 os.environ['ROOT_PATH'] = os.path.dirname(__file__)
 app = Flask(__name__, template_folder='templates')
 # 设置密钥用于session
+app.logger.addHandler(log_handler.getLogHandler(logging.INFO))
+app.logger.addHandler(log_handler.getLogHandler(logging.ERROR))
 app.secret_key = 'ba3a1d17a1a6e9c4cbe3fbe2e6b7ca99a5b0983fe566a1dad8c3ad450d4bf1a1'
 # 模块化
 app.register_blueprint(gpt_api, url_prefix='/gpt')
@@ -63,6 +66,5 @@ def redirect2gpt():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
-
-    # serve(app, host=args.listen, port=args.port)
+    # app.run(host='0.0.0.0', debug=True)
+    serve(app, host=args.listen, port=args.port)
